@@ -107,7 +107,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeTab, setActiveTab] = useState<ActiveTab>('review');
 
   const [apiKey, setApiKey] = useState<string>(() => {
-    return localStorage.getItem(`${STORAGE_KEY}_api_key`) || '';
+    return (
+      localStorage.getItem(`${STORAGE_KEY}_api_key`) ||
+      (import.meta.env.VITE_GEMINI_API_KEY as string) ||
+      ''
+    );
   });
 
   const [filter, setFilter] = useState<FilterState>({
