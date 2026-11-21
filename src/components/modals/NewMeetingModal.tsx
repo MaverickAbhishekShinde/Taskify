@@ -6,15 +6,11 @@ import {
   X,
   Sparkles,
   Upload,
-  FileText,
-  Clock,
   Calendar,
   CheckCircle2,
   Users as UsersIcon,
   Cpu,
-  Layers,
-  ArrowRight,
-  Loader2
+  ArrowRight
 } from 'lucide-react';
 
 interface NewMeetingModalProps {
@@ -30,8 +26,8 @@ export const NewMeetingModal: React.FC<NewMeetingModalProps> = ({ isOpen, onClos
 
   const [title, setTitle] = useState(SAMPLE_TRANSCRIPTS[0].title);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [time, setTime] = useState('11:00 AM');
-  const [duration, setDuration] = useState(30);
+  const [time] = useState('11:00 AM');
+  const [duration] = useState(30);
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>(
     SAMPLE_TRANSCRIPTS[0].participants
   );
@@ -380,7 +376,7 @@ export const NewMeetingModal: React.FC<NewMeetingModalProps> = ({ isOpen, onClos
               className="px-4.5 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 rounded-xl transition-colors shadow-xs flex items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              Extract Action Items with AI
+              <span>Extract Action Items with AI</span>
               <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
             </button>
           </div>
@@ -389,4 +385,3 @@ export const NewMeetingModal: React.FC<NewMeetingModalProps> = ({ isOpen, onClos
     </div>
   );
 };
-

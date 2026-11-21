@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { ActiveTab, User } from '../../types';
+import { ActiveTab } from '../../types';
 import {
   Sparkles,
   Kanban,
@@ -8,14 +8,11 @@ import {
   Clock,
   BarChart3,
   CheckCircle2,
-  Settings,
-  RotateCcw,
   Plus,
   ChevronDown,
-  Layers,
-  FileText,
-  ShieldCheck,
-  Cpu
+  Cpu,
+  RotateCcw,
+  HelpCircle
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -46,8 +43,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenNewMeeting, onOpenApiKeyMo
   ).length;
 
   const totalActiveTasks = tasks.filter((t) => t.status !== 'completed').length;
-  const completedTasks = tasks.filter((t) => t.status === 'completed').length;
-  const completionRate = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
 
   const navItems: { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number | string }[] = [
     {
@@ -75,31 +70,31 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenNewMeeting, onOpenApiKeyMo
     },
     {
       id: 'analytics',
-      label: 'Productivity Analytics',
+      label: 'Analytics',
       icon: <BarChart3 className="w-4 h-4" />,
+    },
+    {
+      id: 'about',
+      label: 'About',
+      icon: <HelpCircle className="w-4 h-4" />,
     },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-7">
             <div
               onClick={() => setActiveTab('review')}
-              className="flex items-center gap-2.5 cursor-pointer group"
+              className="flex items-center gap-2.5 cursor-pointer group select-none"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-500 text-white flex items-center justify-center shadow-sm shadow-blue-500/25 group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-500 text-white flex items-center justify-center shadow-xs shadow-blue-500/20 group-hover:scale-105 transition-transform">
                 <CheckCircle2 className="w-5 h-5 text-white stroke-[2.5]" />
               </div>
               <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-lg text-slate-900 tracking-tight">Taskify</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70">
-                    AI MVP
-                  </span>
-                </div>
+                <span className="font-extrabold text-lg text-slate-900 tracking-tight">Taskify</span>
                 <p className="text-[10px] text-slate-400 font-medium -mt-1 hidden sm:block">
                   Meeting-to-Execution
                 </p>
@@ -114,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenNewMeeting, onOpenApiKeyMo
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all relative ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                       isActive
                         ? 'bg-blue-50 text-blue-600 font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
@@ -141,39 +136,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenNewMeeting, onOpenApiKeyMo
             </nav>
           </div>
 
-          {/* Right Section: Quick Stats, New Meeting CTA, Profile */}
+          {/* Right Section: New Meeting CTA, Profile Menu */}
           <div className="flex items-center gap-3">
-            {/* Quick Analytics pill */}
-            <div
-              onClick={() => setActiveTab('analytics')}
-              className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/80 hover:bg-slate-200/70 border border-slate-200/60 cursor-pointer transition-colors"
-              title="Click to view full Productivity Analytics"
-            >
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] font-semibold text-slate-700">
-                {completionRate}% Executed
-              </span>
-              <span className="text-[10px] text-slate-400 font-mono">
-                ({completedTasks}/{tasks.length})
-              </span>
-            </div>
-
-            {/* AI Engine Status Button */}
-            <button
-              onClick={onOpenApiKeyModal}
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-              title="Configure AI extraction model"
-            >
-              <Cpu className="w-3.5 h-3.5 text-blue-600" />
-              <span className="text-[11px] font-medium">
-                {apiKey ? 'Gemini AI' : 'Smart NLP'}
-              </span>
-            </button>
-
             {/* Primary Action Button: Process Meeting */}
             <button
               onClick={onOpenNewMeeting}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-semibold shadow-xs shadow-blue-500/20 transition-all hover:shadow-md hover:shadow-blue-500/25"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-semibold shadow-xs shadow-blue-500/20 transition-all hover:scale-[1.02]"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               <span className="hidden sm:inline">Process Meeting</span>
@@ -241,6 +209,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenNewMeeting, onOpenApiKeyMo
                     </div>
                   </div>
 
+                  {/* AI Engine Settings */}
+                  <div className="px-2 pt-1 border-b border-slate-100 pb-1">
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        onOpenApiKeyModal();
+                      }}
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-700 hover:bg-slate-50 transition-colors font-medium"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Cpu className="w-3.5 h-3.5 text-blue-600" />
+                        <span>AI Engine Settings</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-slate-400">
+                        {apiKey ? 'Gemini' : 'Smart NLP'}
+                      </span>
+                    </button>
+                  </div>
+
                   {/* Reset Demo Data */}
                   <div className="px-2 pt-1">
                     <button
@@ -251,7 +238,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenNewMeeting, onOpenApiKeyMo
                       className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-rose-600 hover:bg-rose-50 transition-colors font-medium"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
-                      <span>Reset to Demo Data</span>
+                      <span>Reset Demo Data</span>
                     </button>
                   </div>
                 </div>
@@ -282,4 +269,3 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenNewMeeting, onOpenApiKeyMo
     </header>
   );
 };
-

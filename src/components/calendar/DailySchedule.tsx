@@ -1,21 +1,14 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Task, Meeting, TaskStatus, Priority } from '../../types';
+import { Task } from '../../types';
 import { TaskDetailModal } from '../modals/TaskDetailModal';
 import {
-  Calendar as CalendarIcon,
   ChevronLeft,
   ChevronRight,
   Clock,
-  User as UserIcon,
-  Plus,
-  CheckCircle2,
-  AlertCircle,
   Video,
   Layers,
-  ArrowRight,
-  Sparkles,
-  Filter
+  X
 } from 'lucide-react';
 
 export const DailySchedule: React.FC = () => {
@@ -77,7 +70,7 @@ export const DailySchedule: React.FC = () => {
     (m) => m.date === formattedDateString
   );
 
-  // Tasks that are unscheduled (no specific time) or assigned to this date but no hour
+  // Tasks that are unscheduled (no specific time)
   const unscheduledTasks = tasks.filter(
     (t) => !t.scheduledTime && t.status !== 'completed'
   );
@@ -95,9 +88,9 @@ export const DailySchedule: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       {/* Calendar Top Controls Card */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Navigation & Date Label */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
@@ -127,23 +120,14 @@ export const DailySchedule: React.FC = () => {
             </button>
           </div>
 
-          <div>
-            <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-              <span>
-                {currentDate.toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                })}
-              </span>
-              {isToday && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                  Current Day
-                </span>
-              )}
-            </h2>
-          </div>
+          <h2 className="text-sm sm:text-base font-extrabold text-slate-900">
+            {currentDate.toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+          </h2>
         </div>
 
         {/* View Filters */}
@@ -167,7 +151,7 @@ export const DailySchedule: React.FC = () => {
                   : 'hover:text-slate-900'
               }`}
             >
-              Tasks Only ({scheduledTasksOnDay.length})
+              Tasks ({scheduledTasksOnDay.length})
             </button>
             <button
               onClick={() => setFilterType('meetings')}
@@ -187,12 +171,12 @@ export const DailySchedule: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Hourly Timeline (8 cols) */}
         <div className="lg:col-span-8 bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-2">
+          <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-2">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-blue-600" />
               <h3 className="text-sm font-bold text-slate-900">Daily Timeline View</h3>
             </div>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-400 font-medium">
               {scheduledTasksOnDay.length + meetingsOnDay.length} items scheduled
             </span>
           </div>
@@ -200,7 +184,6 @@ export const DailySchedule: React.FC = () => {
           {/* Timeline Slots */}
           <div className="divide-y divide-slate-100">
             {timeSlots.map((slot) => {
-              // Find matching tasks for this slot (e.g., slot starts with "10:")
               const slotHour = slot.split(':')[0];
 
               const slotTasks = filterType !== 'meetings'
@@ -220,16 +203,16 @@ export const DailySchedule: React.FC = () => {
               const hasItems = slotTasks.length > 0 || slotMeetings.length > 0;
 
               return (
-                <div key={slot} className="py-3 flex items-start gap-4 group">
+                <div key={slot} className="py-2.5 flex items-start gap-4 group">
                   {/* Slot Time Indicator */}
                   <div className="w-20 pt-1 shrink-0 text-right">
-                    <span className="text-xs font-mono font-semibold text-slate-500 group-hover:text-blue-600 transition-colors">
+                    <span className="text-xs font-mono font-semibold text-slate-400 group-hover:text-blue-600 transition-colors">
                       {formatSlotDisplay(slot)}
                     </span>
                   </div>
 
                   {/* Slot Content Lane */}
-                  <div className="flex-1 min-h-[48px] rounded-xl transition-colors">
+                  <div className="flex-1 min-h-[44px] rounded-xl transition-colors">
                     {hasItems ? (
                       <div className="space-y-2">
                         {/* Meetings */}
@@ -239,12 +222,12 @@ export const DailySchedule: React.FC = () => {
                             className="p-3 bg-gradient-to-r from-indigo-50/90 to-blue-50/80 rounded-xl border border-indigo-200/80 flex items-center justify-between shadow-2xs"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0">
-                                <Video className="w-4 h-4" />
+                              <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0">
+                                <Video className="w-3.5 h-3.5" />
                               </div>
                               <div>
                                 <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100/70 px-1.5 py-0.5 rounded">
-                                  Meeting Sync • {meet.durationMinutes} mins
+                                  Meeting • {meet.durationMinutes}m
                                 </span>
                                 <h4 className="text-xs font-bold text-slate-900 mt-0.5">
                                   {meet.title}
@@ -267,12 +250,12 @@ export const DailySchedule: React.FC = () => {
                               className="p-3 bg-white hover:bg-slate-50 rounded-xl border border-blue-200/90 shadow-2xs flex items-center justify-between gap-3 cursor-pointer group/task transition-all hover:border-blue-400"
                             >
                               <div className="flex items-center gap-3 min-w-0">
-                                <div className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0" />
+                                <div className="w-2 h-2 rounded-full bg-blue-600 shrink-0" />
                                 <div className="min-w-0">
                                   <h4 className="text-xs font-bold text-slate-900 group-hover/task:text-blue-600 transition-colors truncate">
                                     {task.title}
                                   </h4>
-                                  <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-0.5">
+                                  <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
                                     <span>{task.category}</span>
                                     <span>•</span>
                                     <span className="capitalize">{task.status.replace('_', ' ')}</span>
@@ -286,9 +269,9 @@ export const DailySchedule: React.FC = () => {
                                     <img
                                       src={assignee.avatar}
                                       alt={assignee.name}
-                                      className="w-5 h-5 rounded-full object-cover"
+                                      className="w-4.5 h-4.5 rounded-full object-cover"
                                     />
-                                    <span className="text-[11px] text-slate-700 hidden sm:inline">
+                                    <span className="text-[11px] text-slate-600 hidden sm:inline">
                                       {assignee.name.split(' ')[0]}
                                     </span>
                                   </div>
@@ -298,10 +281,10 @@ export const DailySchedule: React.FC = () => {
                                     e.stopPropagation();
                                     unscheduleTask(task.id);
                                   }}
-                                  className="text-[10px] text-slate-400 hover:text-rose-600 p-1 opacity-0 group-hover/task:opacity-100 transition-opacity"
+                                  className="text-slate-300 hover:text-rose-600 p-1 opacity-0 group-hover/task:opacity-100 transition-opacity"
                                   title="Unschedule task"
                                 >
-                                  ✕
+                                  <X className="w-3.5 h-3.5" />
                                 </button>
                               </div>
                             </div>
@@ -309,11 +292,8 @@ export const DailySchedule: React.FC = () => {
                         })}
                       </div>
                     ) : (
-                      <div className="h-full border border-dashed border-slate-100 rounded-xl p-2.5 flex items-center justify-between text-[11px] text-slate-300 group-hover:border-slate-200 transition-colors">
-                        <span>Free Time Slot</span>
-                        <span className="text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                          Click to schedule
-                        </span>
+                      <div className="h-full border border-dashed border-slate-100 rounded-xl px-3 py-2 text-[11px] text-slate-300 group-hover:border-slate-200 transition-colors">
+                        Free Slot
                       </div>
                     )}
                   </div>
@@ -324,25 +304,21 @@ export const DailySchedule: React.FC = () => {
         </div>
 
         {/* Unscheduled Tasks Section (4 cols) */}
-        <div className="lg:col-span-4 bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs flex flex-col max-h-[720px]">
+        <div className="lg:col-span-4 bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs flex flex-col max-h-[700px]">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
             <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-amber-500" />
+              <Layers className="w-4 h-4 text-blue-600" />
               <h3 className="text-sm font-bold text-slate-900">Unscheduled Tasks</h3>
             </div>
-            <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+            <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-blue-50 text-blue-800 border border-blue-200">
               {unscheduledTasks.length}
             </span>
           </div>
 
-          <p className="text-[11px] text-slate-500 mb-3 leading-relaxed">
-            Tasks without a specific hour slot appear here. Click <strong>Schedule</strong> to slot them into today's timeline.
-          </p>
-
           <div className="overflow-y-auto space-y-2.5 flex-1 pr-1">
             {unscheduledTasks.length === 0 ? (
-              <div className="h-40 border-2 border-dashed border-slate-100 rounded-xl flex items-center justify-center text-center p-4 text-xs text-slate-400">
-                All tasks are currently scheduled!
+              <div className="h-32 border-2 border-dashed border-slate-100 rounded-xl flex items-center justify-center text-center p-4 text-xs text-slate-400">
+                All tasks are scheduled!
               </div>
             ) : (
               unscheduledTasks.map((task) => {
@@ -353,12 +329,12 @@ export const DailySchedule: React.FC = () => {
                     key={task.id}
                     className="p-3 bg-slate-50/70 hover:bg-white rounded-xl border border-slate-200/80 shadow-2xs transition-all hover:border-blue-300"
                   >
-                    <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                         {task.category}
                       </span>
                       {task.dueDate && (
-                        <span className="text-[10px] font-medium text-slate-600 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-medium text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">
                           Due: {task.dueDate.slice(5)}
                         </span>
                       )}
@@ -416,7 +392,7 @@ export const DailySchedule: React.FC = () => {
             <form onSubmit={handleQuickScheduleSubmit} className="space-y-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1">
-                  Target Day: {formattedDateString}
+                  Time Slot ({formattedDateString})
                 </label>
                 <select
                   value={targetSlot}
@@ -443,7 +419,7 @@ export const DailySchedule: React.FC = () => {
                   type="submit"
                   className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl"
                 >
-                  Confirm Schedule
+                  Confirm
                 </button>
               </div>
             </form>
@@ -460,4 +436,3 @@ export const DailySchedule: React.FC = () => {
     </div>
   );
 };
-

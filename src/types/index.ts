@@ -88,7 +88,7 @@ export interface CalendarItem {
   taskId?: string;
 }
 
-export type ActiveTab = 'review' | 'board' | 'calendar' | 'history' | 'analytics';
+export type ActiveTab = 'review' | 'board' | 'calendar' | 'history' | 'analytics' | 'about';
 
 export interface FilterState {
   searchQuery: string;
